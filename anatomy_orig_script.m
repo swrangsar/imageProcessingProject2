@@ -8,7 +8,7 @@ disp('data loaded');
 
 inputImage = anatomy_orig;
 
-numberOfSpokes = 402;
+numberOfSpokes = 64;
 
 % generating the data vector
 
@@ -20,9 +20,6 @@ dataMatrix = fftshift(fft2(fftshift(inputImage)));
 dataMatrix = radon(dataMatrix, theta);
 imageMatrix = iradon(dataMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
 imageMatrix = ifftshift(ifft2(ifftshift(imageMatrix)));
-imshow(abs(imageMatrix));
-size(imageMatrix)
-
 
 
 
