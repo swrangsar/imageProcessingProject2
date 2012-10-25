@@ -138,7 +138,7 @@ function imageMatrix = getImageMatrix(dataMatrix, numberOfSpokes, inputSize)
 theta = 0:numberOfSpokes-1;
 theta = theta .* (180/numberOfSpokes);
 imageMatrix = ifft(dataMatrix, [], 1);
-imageMatrix = iradon(dataMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
+imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
 
 end
 

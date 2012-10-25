@@ -8,7 +8,7 @@ disp('data loaded');
 
 inputImage = anatomy_orig;
 
-numberOfSpokes = 64;
+numberOfSpokes = 8;
 
 % generating the data vector
 
