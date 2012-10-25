@@ -16,8 +16,8 @@ imageSize = size(inputImage);
 
 theta = 0:numberOfSpokes-1;
 theta = theta .* (180/numberOfSpokes);
-dataMatrix = fftshift(fft2(fftshift(inputImage)));
-dataMatrix = radon(dataMatrix, theta);
+dataMatrix = radon(inputImage, theta);
+dataMatrix = fftshift(fft2(fftshift(dataMatrix)));
 imageMatrix = iradon(dataMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
 imageMatrix = ifftshift(ifft2(ifftshift(imageMatrix)));
 
