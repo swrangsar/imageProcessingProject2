@@ -91,7 +91,7 @@ x = x + (t * dx);
 b = data;
 Ax = getDataMatrix(x, numberOfSpokes);
 obj = (Ax - b);
-res=(obj(:)'*obj(:));
+res=(obj(:)'*obj(:)) + (param.TVWeight * getTotalVariation(x));
 
 end
 
@@ -102,7 +102,7 @@ function grad = wGradient(x,numberOfSpokes,data, param)
 
 %Define this function
 gradObj=gOBJ(x,numberOfSpokes,data);
-grad = (gradObj);
+grad = (gradObj) + (param.TVWeight * gradTotalVariation(x)) ;
 
 end
 
@@ -142,4 +142,21 @@ imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
 
 end
 
+%% the total variation penalty function
 
+function totalVariation = getTotalVariation(imageMatrix)
+
+variationX = filter2([1 -1 0], imageMatrix);
+variationY = filter2([1; -1; 0], imageMatrix);
+mag = sqrt( (abs(variationX) .^ 2) + abs((variationY) .^ 2));
+totalVariation = sum(mag(:));
+
+end
+
+%% gradient of the total variation
+
+function gradTV = gradTotalVariation(imageMatrix)
+
+gradTV=filter2([0 -1 1],filter2([1 -1 0], imageMatrix))+filter2([0;-1;1],filter2([1; -1; 0], imageMatrix));
+
+end

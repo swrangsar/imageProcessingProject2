@@ -26,7 +26,7 @@ imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
 % Reconstruction Parameters 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-param.TVWeight = 0.77; 	% Weight for TV penalty
+param.TVWeight = 0.0001; 	% Weight for TV penalty
 param.FOVWeight = 1;
 
 % scale data
