@@ -2,6 +2,7 @@ function x = fnlCg(x0,numberOfSpokes,data, param)
 %-----------------------------------------------------------------------
 %-------------------------------------------------------------------------
 % the nonlinear conjugate gradient method
+disp('running fnlcg');
 
 x = x0;
 
@@ -90,7 +91,7 @@ x = x + (t * dx);
 b = data;
 Ax = getDataMatrix(x, numberOfSpokes);
 obj = (Ax - b);
-res=(obj(:)'*obj(:)) + (param.TVWeight * TV(x)) + (param.FOVWeight * fov(x));
+res=(obj(:)'*obj(:));
 
 end
 
@@ -101,7 +102,7 @@ function grad = wGradient(x,numberOfSpokes,data, param)
 
 %Define this function
 gradObj=gOBJ(x,numberOfSpokes,data);
-grad = (gradObj) + (param.TVWeight * gTV(x)) + (param.FOVWeight * gradFOV(x));
+grad = (gradObj);
 
 end
 
@@ -111,9 +112,10 @@ function gradObj = gOBJ(x,numberOfSpokes,data)
 
 % computes the gradient of the data consistency
 b = data;
+inputSize = size(x);
 Ax = getDataMatrix(x, numberOfSpokes);
-AhAx = getImageMatrix(Ax, numberOfSpokes)
-Ahb = getImageMatrix(b, numberOfSpokes);
+AhAx = getImageMatrix(Ax, numberOfSpokes, inputSize);
+Ahb = getImageMatrix(b, numberOfSpokes, inputSize);
 gradObj = 2 * (AhAx - Ahb);
 
 end
@@ -131,11 +133,11 @@ end
 
 %% function implementing the adjoint system matrix A*
 
-function imageMatrix = getImageMatrix(dataMatrix, numberOfSpokes)
+function imageMatrix = getImageMatrix(dataMatrix, numberOfSpokes, inputSize)
 
 theta = 0:numberOfSpokes-1;
 theta = theta .* (180/numberOfSpokes);
-imageMatrix = iradon(dataMatrix, theta);
+imageMatrix = iradon(dataMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
 imageMatrix = ifftshift(ifft2(ifftshift(imageMatrix)));
 
 end
