@@ -8,7 +8,7 @@ disp('data loaded');
 
 inputImage = anatomy_orig;
 
-numberOfSpokes = 64;
+numberOfSpokes = 200;
 
 % generating the data vector
 
@@ -45,6 +45,7 @@ for n=1:5
 	res = fnlCg(res,numberOfSpokes,dataMatrix, param);  %initialize fnlcg
 	im_res = res;
 	figure(100), imshow(abs(im_res),[]), drawnow;
+    title(['Image estimate using ', num2str(numberOfSpokes), ' spokes']);
 end
 toc
 
