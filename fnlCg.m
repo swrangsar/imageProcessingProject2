@@ -126,8 +126,8 @@ function dataMatrix = getDataMatrix(imageMatrix, numberOfSpokes)
 
 theta = 0:numberOfSpokes-1;
 theta = theta .* (180/numberOfSpokes);
-dataMatrix = fftshift(fft2(fftshift(imageMatrix)));
-dataMatrix = radon(dataMatrix, theta);
+dataMatrix = radon(imageMatrix, theta);
+dataMatrix = fft(dataMatrix, [], 1); % column fft of the matrix
 
 end
 
@@ -137,8 +137,8 @@ function imageMatrix = getImageMatrix(dataMatrix, numberOfSpokes, inputSize)
 
 theta = 0:numberOfSpokes-1;
 theta = theta .* (180/numberOfSpokes);
+imageMatrix = ifft(dataMatrix, [], 1);
 imageMatrix = iradon(dataMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
-imageMatrix = ifftshift(ifft2(ifftshift(imageMatrix)));
 
 end
 
