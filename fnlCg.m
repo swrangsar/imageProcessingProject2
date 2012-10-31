@@ -91,7 +91,9 @@ x = x + (t * dx);
 b = data;
 Ax = getDataMatrix(x, numberOfSpokes);
 obj = (Ax - b);
-res= (obj(:)'*obj(:)) + (param.TVWeight * getTotalVariation(x)) + (param.FOVWeight * fov(x));
+res= (obj(:)'*obj(:)) + (param.TVWeight * getTotalVariation(x)) + ...
+    (param.FOVWeight * fov(x)) + (param.POSWeight * getPosResidual(x)) + ...
+    (param.LaplacianWeight * getLaplacianResidual(x));
 
 end
 
@@ -102,7 +104,9 @@ function grad = wGradient(x,numberOfSpokes,data, param)
 
 %Define this function
 gradObj=gOBJ(x,numberOfSpokes,data);
-grad = (gradObj) + (param.TVWeight * gradTotalVariation(x)) + (param.FOVWeight * gradFOV(x));
+grad = (gradObj) + (param.TVWeight * gradTotalVariation(x)) + ...
+    (param.FOVWeight * gradFOV(x)) + (param.POSWeight * getPosGradient(x)) ...
+    + (param.LaplacianWeight * getLaplacianGradient(x));
 
 end
 
@@ -142,6 +146,7 @@ imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
 
 end
 
+
 %% the total variation penalty function
 
 function totalVariation = getTotalVariation(imageMatrix)
@@ -153,6 +158,7 @@ totalVariation = sum(mag(:));
 
 end
 
+
 %% gradient of the total variation
 
 function gradTV = gradTotalVariation(imageMatrix)
@@ -160,6 +166,7 @@ function gradTV = gradTotalVariation(imageMatrix)
 gradTV=filter2([0 -1 1],filter2([1 -1 0], imageMatrix))+filter2([0;-1;1],filter2([1; -1; 0], imageMatrix));
 
 end
+
 
 %% the FOV Mask function
 
@@ -178,6 +185,7 @@ fovMask = inputMatrix;
 
 end
 
+
 %% the FOV penalty function
 
 function fov = fov(x)
@@ -188,11 +196,50 @@ fov = sum(mag(:));
 
 end
 
+
 %% the gradient of the FOV function
 
 function gradFOV = gradFOV(x)
 
 x = fovMask(x);
 gradFOV = 2 .* x;
+
+end
+
+%% the POS function
+
+function posResidual = getPosResidual(x)
+
+mask = x < 0;
+posMatrix = (x .* mask) .^ 2;
+posResidual = sum(posMatrix(:));
+
+end
+
+%% gradient of the POS function
+
+function posGradient = getPosGradient(x)
+
+mask = x < 0;
+posGradient = 2 * (x .* mask);
+
+end
+
+%% the laplacian function
+
+function laplacianResidual = getLaplacianResidual(imageMatrix)
+
+laplacianX = filter2([1 -2 1], imageMatrix);
+laplacianY = filter2([1; -2; 1], imageMatrix);
+mag = sqrt( (abs(laplacianX) .^ 2) + abs((laplacianY) .^ 2));
+laplacianResidual = sum(mag(:));
+
+end
+
+%% the gradient of the laplacian
+
+function laplacianGradient = getLaplacianGradient(imageMatrix)
+
+laplacianGradient = filter2([0 -1 1],filter2([1 -2 1], imageMatrix))+filter2([0;-1;1],filter2([1; -2; 1], imageMatrix));
 
 end
