@@ -8,7 +8,7 @@ disp('data loaded');
 
 inputImage = anatomy_orig;
 
-numberOfSpokes = 64;
+numberOfSpokes = 32;
 
 % generating the data vector
 
@@ -27,7 +27,7 @@ imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 param.TVWeight = 0.0001; 	% Weight for TV penalty
-param.FOVWeight = 1;
+param.FOVWeight = .001;
 
 % scale data
 im_dc = imageMatrix;

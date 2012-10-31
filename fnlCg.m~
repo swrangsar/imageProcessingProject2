@@ -91,7 +91,7 @@ x = x + (t * dx);
 b = data;
 Ax = getDataMatrix(x, numberOfSpokes);
 obj = (Ax - b);
-res= (obj(:)'*obj(:)) + (param.TVWeight * getTotalVariation(x)) + (param.FOVWeight * fov(x));
+res=(obj(:)'*obj(:)) + (param.TVWeight * getTotalVariation(x)) + (param.FOVWeight * fov(x));
 
 end
 
@@ -165,14 +165,13 @@ end
 
 function fovMask = fovMask(inputMatrix)
 
-fieldRadius = 0.56;
+fieldRadius = size(inputMatrix, 1)/2;
 [rows, cols] = size(inputMatrix);
 % X and Y matrices with ranges normalised to +/- 0.5
 x =  (ones(rows,1) * [1:cols]  - (fix(cols/2)+1))/cols;
 y =  ([1:rows]' * ones(1,cols) - (fix(rows/2)+1))/rows;
 radius = sqrt(x.^2 + y.^2);        % A matrix with every pixel = radius relative to centre.
 i = radius < fieldRadius;
-
 inputMatrix(i) = 0;
 fovMask = inputMatrix;
 
@@ -183,7 +182,7 @@ end
 function fov = fov(x)
 
 x = fovMask(x);
-mag = abs(x) .^ 2; 
+mag = abs(x) .^ 2;
 fov = sum(mag(:));
 
 end
@@ -193,6 +192,6 @@ end
 function gradFOV = gradFOV(x)
 
 x = fovMask(x);
-gradFOV = 2 .* x;
+gradFOV = 2 * x;
 
 end
