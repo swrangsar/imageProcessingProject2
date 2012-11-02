@@ -105,7 +105,8 @@ function grad = wGradient(x,numberOfSpokes,data, param)
 %Define this function
 gradObj=gOBJ(x,numberOfSpokes,data);
 grad = (gradObj) + (param.TVWeight * gradTotalVariation(x)) + ...
-    (param.FOVWeight * gradFOV(x)) + (param.POSWeight * getPosGradient(x));
+    (param.FOVWeight * gradFOV(x)) + (param.POSWeight * getPosGradient(x)) ...
+    + (param.LaplacianWeight * getLaplacianGradient(x));
 
 end
 
@@ -171,7 +172,7 @@ end
 
 function fovMask = fovMask(inputMatrix)
 
-fieldRadius = 0.56;
+fieldRadius = 0.54;
 [rows, cols] = size(inputMatrix);
 % X and Y matrices with ranges normalised to +/- 0.5
 x =  (ones(rows,1) * [1:cols]  - (fix(cols/2)+1))/cols;
@@ -181,6 +182,15 @@ i = radius < fieldRadius;
 
 inputMatrix(i) = 0;
 fovMask = inputMatrix;
+
+% % trying ellipse % %
+rows = 128; cols =rows;
+a = 2; b = 3;
+[X, Y] = meshgrid(-(rows/2):(rows-(rows/2 + 1)), -(cols/2):(cols-(cols/2 + 1)));
+X = X./rows; Y =  Y./cols;
+rad =(((X/a).^2) + ((Y/b).^2));
+rad = rad < 0.;
+imshow(rad, []);
 
 end
 
