@@ -8,7 +8,7 @@ disp('data loaded');
 
 inputImage = anatomy_orig;
 
-numberOfSpokes = 32;
+numberOfSpokes = 64;
 
 % generating the data vector
 
@@ -27,15 +27,17 @@ imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 param.TVWeight = 0.0001; 	% Weight for TV penalty
-param.FOVWeight = .001;
-param.POSWeight = 0;
-param.LaplacianWeight = 0.000001;
+param.FOVWeight = 1;
+param.POSWeight = 5;
+param.LaplacianWeight = 0.23;
 
 % scale data
 im_dc = imageMatrix;
-dataMatrix = dataMatrix/max(abs(dataMatrix(:)));
 
-im_dc = im_dc/max(abs(im_dc(:)));
+% % the scaling part
+% % dataMatrix = dataMatrix/max(abs(dataMatrix(:)));
+% 
+% % im_dc = im_dc/max(abs(im_dc(:)));
 
 res = im_dc;  %Initial degraded image supplied to fnlcg function
 figure(300), imshow(abs(res), []);

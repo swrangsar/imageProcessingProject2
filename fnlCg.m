@@ -172,7 +172,7 @@ end
 
 function fovMask = fovMask(inputMatrix)
 
-fieldRadius = 0.56;
+fieldRadius = 0.54;
 [rows, cols] = size(inputMatrix);
 % X and Y matrices with ranges normalised to +/- 0.5
 x =  (ones(rows,1) * [1:cols]  - (fix(cols/2)+1))/cols;
