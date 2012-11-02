@@ -172,15 +172,20 @@ end
 
 function fovMask = fovMask(inputMatrix)
 
-fieldRadius = 0.54;
 [rows, cols] = size(inputMatrix);
-% X and Y matrices with ranges normalised to +/- 0.5
-x =  (ones(rows,1) * [1:cols]  - (fix(cols/2)+1))/cols;
-y =  ([1:rows]' * ones(1,cols) - (fix(rows/2)+1))/rows;
-radius = sqrt(x.^2 + y.^2);        % A matrix with every pixel = radius relative to centre.
-i = radius < fieldRadius;
+xRadius = ceil(rows/2);
+yRadius = ceil(cols/2);
+[X, Y] = meshgrid(-(xRadius):(rows-(xRadius+1)), -yRadius:(cols-(yRadius + 1)));
+a = 4;
+b = 5;
+term1 = (X./a).^2;
+term2 = (Y./b).^2;
+radius = sqrt(term1 + term2);
+normalizer = sqrt((xRadius/a)^2 + (0/b)^2);
+normalizedRadius = radius/normalizer;
+mask = normalizedRadius < 0.93;
 
-inputMatrix(i) = 0;
+inputMatrix(mask) = 0;
 fovMask = inputMatrix;
 
 end

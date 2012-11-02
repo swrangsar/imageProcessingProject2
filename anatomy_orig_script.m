@@ -27,7 +27,7 @@ imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 param.TVWeight = 0.0001; 	% Weight for TV penalty
-param.FOVWeight = 10;
+param.FOVWeight = 1;
 param.POSWeight = 5;
 param.LaplacianWeight = 0.23;
 
