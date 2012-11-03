@@ -87,7 +87,7 @@ while(1)
 	if (k > Itnlim) | (norm(dx(:)) < gradToll) 
 		break;
     end
-    if repetitionCounter > 5
+    if repetitionCounter > 7
         break;
     end
     

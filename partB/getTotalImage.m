@@ -64,7 +64,7 @@ for n=1:5
 	figure(100), imshow(abs(im_res),[]), drawnow;
     title(['Image estimate using ', num2str(numberOfSpokes), ' spokes from multiple coils']);
 
-    if repetitionCounter > 5
+    if repetitionCounter > 7
         break;
     end;
 end

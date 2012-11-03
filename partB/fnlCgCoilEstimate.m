@@ -2,7 +2,7 @@ function [x, repetitionCounter] = fnlCgCoilEstimate(x0,numberOfSpokes,data, para
 %-----------------------------------------------------------------------
 %-------------------------------------------------------------------------
 % the nonlinear conjugate gradient method
-disp('running fnlcg');
+disp('running fnlcgCoilEstimate');
 
 x = x0;
 
