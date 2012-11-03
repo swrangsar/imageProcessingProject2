@@ -25,6 +25,49 @@ for k = 1:numberOfCoils
 end
 avgCoilEstimate = avgCoilEstimate ./ numberOfCoils;
 
-figure(900); clf; imshow(abs(avgCoilEstimate), []);
+% since we removed the phases we can now take just the real part of the avg
+% estimate image
+
+finalCoilEstimate = real(avgCoilEstimate);
+
+
+% figure(900); clf; imshow(abs(avgCoilEstimate), []);
+
+%% next we improve the average coil estimate
+
+% generating the data vector
+
+theta = 0:numberOfSpokes-1;
+theta = theta .* (180/numberOfSpokes);
+dataMatrix = radon(finalCoilEstimate, theta);
+dataMatrix = fft(dataMatrix, [], 1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Reconstruction Parameters 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+param.TVWeight = 0.0001; 	% Weight for TV penalty
+param.FOVWeight = 10;
+param.POSWeight = 5;
+param.LaplacianWeight = 0.23;
+
+
+
+res = finalCoilEstimate;  %Initial degraded image supplied to fnlcg function
+figure(300), imshow(abs(res), []);
+
+% do iterations
+tic
+for n=1:5
+	[res, repetitionCounter] = fnlCg(res,numberOfSpokes,dataMatrix, param);  %initialize fnlcg
+	im_res = res;
+	figure(100), imshow(abs(im_res),[]), drawnow;
+    title(['Image estimate using ', num2str(numberOfSpokes), ' spokes from multiple coils']);
+
+    if repetitionCounter > 5
+        break;
+    end;
+end
+toc
 
 rmpath /Users/swrangsarbasumatary/Desktop/imageProcessingProject2/

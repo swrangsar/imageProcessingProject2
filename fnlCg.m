@@ -1,4 +1,4 @@
-function x = fnlCg(x0,numberOfSpokes,data, param)
+function [x, repetitionCounter] = fnlCg(x0,numberOfSpokes,data, param)
 %-----------------------------------------------------------------------
 %-------------------------------------------------------------------------
 % the nonlinear conjugate gradient method
@@ -13,6 +13,12 @@ alpha = 0.0100;
 beta = 0.6000;
 t0 = 1;
 Itnlim = 16;	
+
+%%%%%%%%%%
+repetitionCounter = 0;
+previousObjective = 0;
+%%%%%%%%%%
+
 
 k = 0;
 
@@ -70,13 +76,24 @@ while(1)
 	k = k + 1;
 	
 	%TODO: need to "think" of a "better" stopping criteria ;-)
+ 
+    if f1 == previousObjective
+        repetitionCounter = repetitionCounter + 1;
+    else 
+        repetitionCounter = 0;
+    end
+    previousObjective = f1;
+    
 	if (k > Itnlim) | (norm(dx(:)) < gradToll) 
 		break;
+    end
+    if repetitionCounter > 5
+        break;
     end
     
 end
 
-
+repetitionCounter
 return;
 
 end

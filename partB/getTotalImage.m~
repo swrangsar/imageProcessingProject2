@@ -16,13 +16,67 @@ coilEstimate = cell(numberOfCoils, 1);
 
 for k = 1:numberOfCoils
     coilEstimate{k} = getCoilEstimate(data(:, :, k), b1(:, :, k), numberOfSpokes);
-    figure(k*100), imshow(abs(coilEstimate{k}), []);
+%     figure(k*100), imshow(abs(coilEstimate{k}), []);
 end
 
-avgCoilEstimate = zeros(size(coilEstimate));
+avgCoilEstimate = zeros(size(coilEstimate{1}));
 for k = 1:numberOfCoils
     avgCoilEstimate = avgCoilEstimate + coilEstimate{k};
 end
-avgCoilEstimate = avgCoilEstimate .
+avgCoilEstimate = avgCoilEstimate ./ numberOfCoils;
 
+% since we removed the phases we can now take just the real part of the avg
+% estimate image
+
+finalCoilEstimate = real(avgCoilEstimate);
+
+
+figure(900); clf; imshow(abs(avgCoilEstimate), []);
+
+%% here we improve the average coil estimate
+inputImage = anatomy_orig;
+
+numberOfSpokes = 64;
+
+% generating the data vector
+
+imageSize = size(inputImage);
+
+theta = 0:numberOfSpokes-1;
+theta = theta .* (180/numberOfSpokes);
+dataMatrix = radon(inputImage, theta);
+dataMatrix = fft(dataMatrix, [], 1);
+imageMatrix = ifft(dataMatrix, [], 1);
+imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, imageSize(1));
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Reconstruction Parameters 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+param.TVWeight = 0.0001; 	% Weight for TV penalty
+param.FOVWeight = 1;
+param.POSWeight = 5;
+param.LaplacianWeight = 0.23;
+
+% scale data
+im_dc = imageMatrix;
+
+% % the scaling part
+% % dataMatrix = dataMatrix/max(abs(dataMatrix(:)));
+% 
+% % im_dc = im_dc/max(abs(im_dc(:)));
+
+res = im_dc;  %Initial degraded image supplied to fnlcg function
+figure(300), imshow(abs(res), []);
+
+% do iterations
+tic
+for n=1:5
+	res = fnlCg(res,numberOfSpokes,dataMatrix, param);  %initialize fnlcg
+	im_res = res;
+	figure(100), imshow(abs(im_res),[]), drawnow;
+    title(['Image estimate using ', num2str(numberOfSpokes), ' spokes']);
+end
+toc
 rmpath /Users/swrangsarbasumatary/Desktop/imageProcessingProject2/
