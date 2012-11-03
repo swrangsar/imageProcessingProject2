@@ -9,7 +9,7 @@ disp('sim_8ch_data loaded successfully!');
 inputImage = data;
 coilProfile = b1;
 
-numberOfSpokes = 8;32;
+numberOfSpokes = 32;
 numberOfCoils = 8;
 
 coilEstimate = cell(numberOfCoils, 1);
@@ -55,6 +55,7 @@ param.LaplacianWeight = 0.23;
 
 res = finalCoilEstimate;  %Initial degraded image supplied to fnlcg function
 figure(300), imshow(abs(res), []);
+title(['Average of the image estimates from all coils using ', num2str(numberOfSpokes), ' spokes']);
 
 % do iterations
 tic
@@ -62,7 +63,7 @@ for n=1:5
 	[res, repetitionCounter] = fnlCg(res,numberOfSpokes,dataMatrix, param);  %initialize fnlcg
 	im_res = res;
 	figure(100), imshow(abs(im_res),[]), drawnow;
-    title(['Image estimate using ', num2str(numberOfSpokes), ' spokes from multiple coils']);
+    title(['Final image estimate using ', num2str(numberOfSpokes), ' spokes from multiple coils']);
 
     if repetitionCounter > 7
         break;
