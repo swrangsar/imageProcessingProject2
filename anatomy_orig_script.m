@@ -30,15 +30,9 @@ param.FOVWeight = 1;
 param.POSWeight = 5;
 param.LaplacianWeight = 0.23;
 
-% scale data
-im_dc = imageMatrix;
 
-% % the scaling part
-% % dataMatrix = dataMatrix/max(abs(dataMatrix(:)));
-% 
-% % im_dc = im_dc/max(abs(im_dc(:)));
 
-res = im_dc;  %Initial degraded image supplied to fnlcg function
+res = imageMatrix;  %Initial degraded image supplied to fnlcg function
 figure(300), imshow(abs(res), []);
 title(['Initial image estimate using ', num2str(numberOfSpokes), ' spokes']);
 
