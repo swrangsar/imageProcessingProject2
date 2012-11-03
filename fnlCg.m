@@ -133,7 +133,7 @@ function gradObj = gOBJ(x,numberOfSpokes,data)
 
 % computes the gradient of the data consistency
 b = data;
-inputSize = size(x);
+inputSize = size(x, 1);
 Ax = getDataMatrix(x, numberOfSpokes);
 AhAx = getImageMatrix(Ax, numberOfSpokes, inputSize);
 Ahb = getImageMatrix(b, numberOfSpokes, inputSize);
@@ -159,7 +159,7 @@ function imageMatrix = getImageMatrix(dataMatrix, numberOfSpokes, inputSize)
 theta = 0:numberOfSpokes-1;
 theta = theta .* (180/numberOfSpokes);
 imageMatrix = ifft(dataMatrix, [], 1);
-imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize(1));
+imageMatrix = iradon(imageMatrix, theta, 'linear', 'Ram-Lak', 1, inputSize);
 
 end
 
