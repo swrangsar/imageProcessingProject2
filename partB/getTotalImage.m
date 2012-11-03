@@ -54,16 +54,16 @@ param.LaplacianWeight = 0.23;
 
 
 res = finalCoilEstimate;  %Initial degraded image supplied to fnlcg function
-figure(300), imshow(abs(res), []);
-title(['Avg coil estimate w/ ', num2str(numberOfSpokes), ' spokes']);
+% figure(300), imshow(abs(res), []);
+% title(['Avg coil estimate w/ ', num2str(numberOfSpokes), ' spokes']);
 
 % do iterations
 tic
 for n=1:5
 	[res, repetitionCounter] = fnlCg(res,numberOfSpokes,dataMatrix, param);  %initialize fnlcg
 	im_res = res;
-	figure(100), imshow(abs(im_res),[]), drawnow;
-    title(['Final coil estimate w/ ', num2str(numberOfSpokes), ' spokes']);
+% 	figure(100), imshow(abs(im_res),[]), drawnow;
+%     title(['Final coil estimate w/ ', num2str(numberOfSpokes), ' spokes']);
 
     if repetitionCounter > 7
         break;

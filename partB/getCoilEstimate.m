@@ -32,16 +32,16 @@ res = imageMatrix;
 
 
 tic
-% figure;
+figure;
 for n=1:5
 	[res, repetitionCounter] = fnlCgCoilEstimate(res,numberOfSpokes,dataMatrix, param);  %initialize fnlcg
 	im_res = res;
-% 	imshow(abs(im_res),[]), drawnow;
-%     title(['Coil estimate using ', num2str(numberOfSpokes), ' spokes']);
+	imshow(abs(im_res),[]), drawnow;
     if repetitionCounter > 5
         break;
     end;
 end
+title(['Coil estimate using ', num2str(numberOfSpokes), ' spokes']);
 toc
 
 coilEstimate = im_res;
